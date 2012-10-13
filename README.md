@@ -37,6 +37,7 @@ The following figures show possible configurations of the game.
   A B C D E F G H
 Illegal configuration:
 Brick B6 cannot be placed there.
+
   A B C D E F G H
 8                 8
 7          7
@@ -64,11 +65,13 @@ Here, player  wins.
 He built a bridge from A3 to E7.
 
 Your Task
+--
 In this project, you will implement a minimax algorithm to play this game automatically. You are free to develop
 the heuristic that you want, but your program must decide on the next move to take in at most 3 seconds (real time).
 In addition, you are also free to implement an alpha-beta search, as it may help you win the tournament (see below);
 however, no extra points will be given explicitly for the alpha-beta code.
 Play Modes
+--
 Your program should be able to run in manual mode and in automatic mode. This means that you should be able
 to run your program with:
 1. manual entry for both ’s moves and ’s moves
@@ -76,6 +79,7 @@ to run your program with:
 3. manual entry for ’s moves & automatic moves for 
 After each move, your program must display the new configuration of the board.
 Programming details
+--
 To program the game, you can use Java, C or C++. If you wish to use another language, please check with me first.
 It is not necessary to have a fancy user-interface. A simple command-line interface is sufficient
 Tournament
@@ -83,23 +87,26 @@ To make the project more fun, we will organize a tournament between all the proj
 will be allocated to your result in this tournament. If, at anytime, your program takes more that 3 seconds to decide
 its next move, you will automatically be eliminated from the game, and your opponent will win.
 Report
+--
 Your final deliverable must be accompanied by a written report (~3-5pages) that:
 - describes your program (how to run it, what the main functions and data structures are, …);
 - describes and justifies your heuristic.
 - describes and explains your results at the tournament (why you think you lost against your opponent – or
 why you think you won the tournament).
 Deliverables
+--
 The submission of the project will consist of 4 deliverables:
 Deliverable Functionality Weight Due Date
 Deliverable I Minimax – no interface
+--
 – no heuristic
 40% Monday October 22
 Deliverable II Minimax + interface
-+ manual play (no
-heuristic)
+--
++ manual play (no heuristic)
 50% Monday November 12
-Tournament Minimax + interface
-+ heuristic
+Tournament Minimax + interface + heuristic
+--
 85%
 Monday November 26
 The tournament will be held in the lab on Nov 27&28.
