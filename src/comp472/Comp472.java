@@ -11,7 +11,7 @@ package comp472;
 public class Comp472
 {
     //Depth needs to be a minimum of 1
-    static final int DEPTH =5;//;
+    static final int DEPTH =3;//;
 
     /**
      * @param args the command line arguments
@@ -33,7 +33,7 @@ public class Comp472
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     System.out.println("Finally Chosen: " + mBestMove.getStrength());
-                    System.out.println("Nth etaration: "+count);
+                    //System.out.println("Nth etaration: "+count);
                     mBoard.realMove(mBestMove);
                 }
                 break;

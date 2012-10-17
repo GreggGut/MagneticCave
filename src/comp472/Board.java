@@ -19,7 +19,9 @@ public class Board
 {
 
     private final short COL = 8;
-    private final short ROW = 8;
+    private final short ROW = 3;//8;
+    
+    private Random randomGenerator = new Random();
     /*
      * 0 - empty 
      * 1 - player 1
@@ -147,6 +149,16 @@ public class Board
     public int checkForWinner()
     {
         displayBoard();
+        
+        for(int i=0;i<COL;i++)
+        {
+            for(int j=0;j<ROW;j++)
+            {
+                
+            }
+        }
+        
+        
         nextPlayer();
         if (!isBoardFull())
         {
@@ -299,7 +311,7 @@ public class Board
                 //System.out.println("Not full left");
 
                 int col = tryMove(row, false, player);
-                int strength = getMaxNodes(depth - 1, maxStrength);
+                int strength = getMinNodes(depth - 1, maxStrength);
                 if (strength >= maxStrength)
                 {
                     //System.out.println("Better");
@@ -309,25 +321,28 @@ public class Board
                     mBestMove.setStrength(strength);
                 }
                 undoTryMove(col, row);//, col);//false);
+                
+                System.out.println("\nNew ROW\n");
             }
 
-            //From right
-            if (!isRowFull(row))
-            {
-                //System.out.println("Not full right");
-
-                int col = tryMove(row, true, player);
-                int strength = getMaxNodes(depth - 1, maxStrength);
-                if (strength >= maxStrength)
-                {
-                    //System.out.println("Better");
-                    maxStrength = strength;
-                    mBestMove.setRow(row);
-                    mBestMove.setCol(col);
-                    mBestMove.setStrength(strength);
-                }
-                undoTryMove(col, row);//true);
-            }
+//            //From right
+//            if (!isRowFull(row))
+//            {
+//                //System.out.println("Not full right");
+//
+//                int col = tryMove(row, true, player);
+//                int strength = getMinNodes(depth - 1, maxStrength);
+//                if (strength >= maxStrength)
+//                {
+//                    //System.out.println("Better");
+//                    maxStrength = strength;
+//                    mBestMove.setRow(row);
+//                    mBestMove.setCol(col);
+//                    mBestMove.setStrength(strength);
+//                }
+//                undoTryMove(col, row);//true);
+//                System.out.println("\nNew ROW\n");
+//            }
         }
 
         System.out.println("Player: " + player + "     with tokens: " + countNtokens());
@@ -374,12 +389,12 @@ public class Board
                 int col = tryMove(row, false, player);
                 int strength = getMinNodes(depth - 1, max);
                 //System.out.print(strength + " ");
-                if (strength > min)
-                {
-                    undoTryMove(col, row);
-                    //System.out.println("Chosen max!: " + strength+" ");
-                    return strength;
-                }
+//                if (strength > min)
+//                {
+//                    undoTryMove(col, row);
+//                    System.out.println("Chosen max (alpha-beta): " + strength+" ");
+//                    return strength;
+//                }
                 if (strength > max)
                 {
                     max = strength;
@@ -388,27 +403,27 @@ public class Board
             }
 
             //From right
-            if (!isRowFull(row))
-            {
-                int col = tryMove(row, true, player);
-                int strength = getMinNodes(depth - 1, max);
-                //System.out.print(strength + " ");
-                if (strength > min)
-                {
-                    undoTryMove(col, row);
-                    //System.out.println("Chosen max!: " + strength+" ");
-                    return strength;
-                }
-                if (strength > max)
-                {
-                    max = strength;
-                }
-                undoTryMove(col, row);
-            }
+//            if (!isRowFull(row))
+//            {
+//                int col = tryMove(row, true, player);
+//                int strength = getMinNodes(depth - 1, max);
+//                //System.out.print(strength + " ");
+////                if (strength > min)
+////                {
+////                    undoTryMove(col, row);
+////                    System.out.println("Chosen max (alpha-beta): " + strength+" ");
+////                    return strength;
+////                }
+//                if (strength > max)
+//                {
+//                    max = strength;
+//                }
+//                undoTryMove(col, row);
+//            }
 
 
         }
-        //System.out.println("Chosen max: " + maxStrength+" ");
+        System.out.println("\nChosen max: " + max+" ");
         return max;
     }
 
@@ -440,17 +455,18 @@ public class Board
         for (int row = 0; row < ROW; row++)
         {
 
+            //For left
             if (!isRowFull(row))
             {
                 int col = tryMove(row, false, mPlayer);
                 int strength = getMaxNodes(depth - 1, min);
                 //System.out.print(strength + " ");
-                if (strength < max)
-                {
-                    //System.out.print("Chosen min!: "+strength+" ");
-                    undoTryMove(col, row);
-                    return strength;
-                }
+//                if (strength < max)
+//                {
+//                    System.out.print("Chosen min (alpha-beta): "+strength+" ");
+//                    undoTryMove(col, row);
+//                    return strength;
+//                }
                 if (strength < min)
                 {
                     min = strength;
@@ -458,25 +474,26 @@ public class Board
                 undoTryMove(col, row);
             }
 
-            if (!isRowFull(row))
-            {
-                int col = tryMove(row, true, mPlayer);
-                int strength = getMaxNodes(depth - 1, min);
-                //System.out.print(strength + " ");
-                if (strength < max)
-                {
-                    //System.out.print("Chosen min!: "+strength+" ");
-                    undoTryMove(col, row);
-                    return strength;
-                }
-                if (strength < min)
-                {
-                    min = strength;
-                }
-                undoTryMove(col, row);
-            }
+            //for right
+//            if (!isRowFull(row))
+//            {
+//                int col = tryMove(row, true, mPlayer);
+//                int strength = getMaxNodes(depth - 1, min);
+//                System.out.print(strength + " ");
+////                if (strength < max)
+////                {
+////                    System.out.print("Chosen min (alpha-beta): "+strength+" ");
+////                    undoTryMove(col, row);
+////                    return strength;
+////                }
+//                if (strength < min)
+//                {
+//                    min = strength;
+//                }
+//                undoTryMove(col, row);
+//            }
         }
-        //System.out.print("Chosen min: "+minStrength+" ");
+        System.out.println("\nChosen min: "+min+" ");
         return min;
     }
 
@@ -486,8 +503,9 @@ public class Board
      */
     private int heuristic()
     {
-        Random randomGenerator = new Random();
-        return randomGenerator.nextInt(1000);
+        int toReturn = randomGenerator.nextInt(1000);
+        System.out.print(toReturn+" ");
+        return toReturn;
     }
 
     /**
