@@ -19,8 +19,7 @@ public class Board
 {
 
     private final short COL = 8;
-    private final short ROW = 3;//8;
-    
+    private final short ROW = 8;
     private Random randomGenerator = new Random();
     /*
      * 0 - empty 
@@ -100,8 +99,7 @@ public class Board
     /**
      *
      * @param x - x coordinates of the new token placements
-     * @param y - y coordinates of the new token placements (inverted --> 8 on
-     * top and 1 at the bottom
+     * @param y - y coordinates of the new token placements (inverted --> 8 on top and 1 at the bottom
      * @return True if the placement of the token was successful, otherwise false
      */
     public boolean addToken(Token mToken)
@@ -144,21 +142,80 @@ public class Board
 
     /**
      * Verify if a winner exists and if the board is full
+     *
      * @return
      */
     public int checkForWinner()
     {
         displayBoard();
-        
-        for(int i=0;i<COL;i++)
+        //int whichPlayer = 1;
+        String winner;
+        if (player == 1)
         {
-            for(int j=0;j<ROW;j++)
+            winner = "Black";
+        }
+        else
+        {
+            winner = "White";
+        }
+        for (int col = 0; col < COL; col++)
+        {
+            for (int row = 0; row < ROW; row++)
             {
-                
+                //Checking for vertical wins
+                if (row < 4)
+                {
+                    if (tokenPlacements[col][row] == player && tokenPlacements[col][row + 1] == player && tokenPlacements[col][row + 2] == player && tokenPlacements[col][row + 3] == player && tokenPlacements[col][row + 4] == player)
+                    {
+                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end row " + (row + 5) + " Player " + winner + " wins!");
+                        System.out.println("Vertical win");
+                        winnderExists = true;
+                        return player;
+                    }
+                }
+
+                //checking for horizontal wins
+                if (col < 4)
+                {
+                    if (tokenPlacements[col][row] == player && tokenPlacements[col + 1][row] == player && tokenPlacements[col + 2][row] == player && tokenPlacements[col + 3][row] == player && tokenPlacements[col + 4][row] == player)
+                    {
+                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " Player " + winner + " wins!");
+                        System.out.println("Horizontal win");
+                        winnderExists = true;
+                        return player;
+                    }
+                }
+
+                //checking for diagonal win from bottom left to upper right
+                if (row < 4 && col < 4)
+                {
+                    if (tokenPlacements[col][row] == player && tokenPlacements[col + 1][row + 1] == player && tokenPlacements[col + 2][row + 2] == player && tokenPlacements[col + 3][row + 3] == player && tokenPlacements[col + 4][row + 4] == player)
+                    {
+                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
+                        System.out.println("Diagonal win, bottom left to upper right");
+                        winnderExists = true;
+                        return player;
+                    }
+
+                }
+
+                //checking for diagonal win from bottom right to upper left
+                if (row > 3 && col < 4)
+                {
+                    if (tokenPlacements[col][row] == player && tokenPlacements[col + 1][row - 1] == player && tokenPlacements[col + 2][row - 2] == player && tokenPlacements[col + 3][row - 3] == player && tokenPlacements[col + 4][row - 4] == player)
+                    {
+                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
+                        System.out.println("Diagonal win, bottom right to upper left");
+                        winnderExists = true;
+                        return player;
+                    }
+
+                }
+
             }
         }
-        
-        
+
+
         nextPlayer();
         if (!isBoardFull())
         {
@@ -170,6 +227,7 @@ public class Board
 
     /**
      * Verify is the board contains any empty spaces
+     *
      * @return True is the board is full, otherwise false
      */
     private boolean isBoardFull()
@@ -190,6 +248,7 @@ public class Board
 
     /**
      * Is there a winner
+     *
      * @return True if a winner exists, otherwise false
      */
     public boolean doesWinnderExists()
@@ -207,6 +266,7 @@ public class Board
 
     /**
      * Get user input as to where to place a new token
+     *
      * @return The token that correspond to the place where the user wants to place a new token
      */
     public Token getUserMove()
@@ -240,6 +300,7 @@ public class Board
 
     /**
      * Convert user input into a token with coordinates
+     *
      * @param mXc The character corresponding to the column of the token
      * @param mY The integer corresponding to the row of the token
      * @return A token with the row and column coordinates of the new token
@@ -321,32 +382,31 @@ public class Board
                     mBestMove.setStrength(strength);
                 }
                 undoTryMove(col, row);//, col);//false);
-                
-                System.out.println("\nNew ROW\n");
+
+                //System.out.println("\nNew ROW\n");
             }
 
-//            //From right
-//            if (!isRowFull(row))
-//            {
-//                //System.out.println("Not full right");
-//
-//                int col = tryMove(row, true, player);
-//                int strength = getMinNodes(depth - 1, maxStrength);
-//                if (strength >= maxStrength)
-//                {
-//                    //System.out.println("Better");
-//                    maxStrength = strength;
-//                    mBestMove.setRow(row);
-//                    mBestMove.setCol(col);
-//                    mBestMove.setStrength(strength);
-//                }
-//                undoTryMove(col, row);//true);
-//                System.out.println("\nNew ROW\n");
-//            }
+            //From right
+            if (!isRowFull(row))
+            {
+                //System.out.println("Not full right");
+
+                int col = tryMove(row, true, player);
+                int strength = getMinNodes(depth - 1, maxStrength);
+                if (strength >= maxStrength)
+                {
+                    //System.out.println("Better");
+                    maxStrength = strength;
+                    mBestMove.setRow(row);
+                    mBestMove.setCol(col);
+                    mBestMove.setStrength(strength);
+                }
+                undoTryMove(col, row);//true);
+                //System.out.println("\nNew ROW\n");
+            }
         }
 
-        System.out.println("Player: " + player + "     with tokens: " + countNtokens());
-
+        //System.out.println("Player: " + player + "     with tokens: " + countNtokens());
         return mBestMove;
     }
 
@@ -389,12 +449,12 @@ public class Board
                 int col = tryMove(row, false, player);
                 int strength = getMinNodes(depth - 1, max);
                 //System.out.print(strength + " ");
-//                if (strength > min)
-//                {
-//                    undoTryMove(col, row);
-//                    System.out.println("Chosen max (alpha-beta): " + strength+" ");
-//                    return strength;
-//                }
+                if (strength > min)
+                {
+                    undoTryMove(col, row);
+                    //System.out.println("Chosen max (alpha-beta): " + strength+" ");
+                    return strength;
+                }
                 if (strength > max)
                 {
                     max = strength;
@@ -403,33 +463,32 @@ public class Board
             }
 
             //From right
-//            if (!isRowFull(row))
-//            {
-//                int col = tryMove(row, true, player);
-//                int strength = getMinNodes(depth - 1, max);
-//                //System.out.print(strength + " ");
-////                if (strength > min)
-////                {
-////                    undoTryMove(col, row);
-////                    System.out.println("Chosen max (alpha-beta): " + strength+" ");
-////                    return strength;
-////                }
-//                if (strength > max)
-//                {
-//                    max = strength;
-//                }
-//                undoTryMove(col, row);
-//            }
-
-
+            if (!isRowFull(row))
+            {
+                int col = tryMove(row, true, player);
+                int strength = getMinNodes(depth - 1, max);
+                //System.out.print(strength + " ");
+                if (strength > min)
+                {
+                    undoTryMove(col, row);
+                    //System.out.println("Chosen max (alpha-beta): " + strength+" ");
+                    return strength;
+                }
+                if (strength > max)
+                {
+                    max = strength;
+                }
+                undoTryMove(col, row);
+            }
         }
-        System.out.println("\nChosen max: " + max+" ");
+        //System.out.println("\nChosen max: " + max+" ");
         return max;
     }
 
     /**
      * Expand all the nodes and get the minimum heuristic possible
-     * @param depth What is the depth to which we need to extend 
+     *
+     * @param depth What is the depth to which we need to extend
      * @param max The maximum value of the parent mode, used for alpha beta pruning
      * @return The minimum heuristic value
      */
@@ -461,12 +520,12 @@ public class Board
                 int col = tryMove(row, false, mPlayer);
                 int strength = getMaxNodes(depth - 1, min);
                 //System.out.print(strength + " ");
-//                if (strength < max)
-//                {
-//                    System.out.print("Chosen min (alpha-beta): "+strength+" ");
-//                    undoTryMove(col, row);
-//                    return strength;
-//                }
+                if (strength < max)
+                {
+                    //System.out.print("Chosen min (alpha-beta): "+strength+" ");
+                    undoTryMove(col, row);
+                    return strength;
+                }
                 if (strength < min)
                 {
                     min = strength;
@@ -475,47 +534,48 @@ public class Board
             }
 
             //for right
-//            if (!isRowFull(row))
-//            {
-//                int col = tryMove(row, true, mPlayer);
-//                int strength = getMaxNodes(depth - 1, min);
-//                System.out.print(strength + " ");
-////                if (strength < max)
-////                {
-////                    System.out.print("Chosen min (alpha-beta): "+strength+" ");
-////                    undoTryMove(col, row);
-////                    return strength;
-////                }
-//                if (strength < min)
-//                {
-//                    min = strength;
-//                }
-//                undoTryMove(col, row);
-//            }
+            if (!isRowFull(row))
+            {
+                int col = tryMove(row, true, mPlayer);
+                int strength = getMaxNodes(depth - 1, min);
+                //System.out.print(strength + " ");
+                if (strength < max)
+                {
+                    //System.out.print("Chosen min (alpha-beta): "+strength+" ");
+                    undoTryMove(col, row);
+                    return strength;
+                }
+                if (strength < min)
+                {
+                    min = strength;
+                }
+                undoTryMove(col, row);
+            }
         }
-        System.out.println("\nChosen min: "+min+" ");
+        //System.out.println("\nChosen min: "+min+" ");
         return min;
     }
 
     /**
      * Get the heuristic value of a given token placement
-     * @return 
+     *
+     * @return
      */
     private int heuristic()
     {
         int toReturn = randomGenerator.nextInt(1000);
-        System.out.print(toReturn+" ");
+        //System.out.print(toReturn+" ");
         return toReturn;
     }
 
     /**
      * Check is a token can be placed in a given row
+     *
      * @param row The row to be checked for an empty space
      * @return True if an empty space exists in row, otherwise false;
      */
     private boolean isRowFull(int row)
     {
-
         for (int col = 0; col < COL; col++)
         {
             if (tokenPlacements[col][row] == 0)
@@ -527,7 +587,8 @@ public class Board
     }
 
     /**
-     *Place a token in the given row and adjust it to right or left
+     * Place a token in the given row and adjust it to right or left
+     *
      * @param row - The row number
      * @param leftRight - False is left, true is right
      */
@@ -563,6 +624,7 @@ public class Board
 
     /**
      * Undo the last move
+     *
      * @param col - The column coordinates for the token that needs to be removed
      * @param row - The row coordinates for the token that needs to be removed
      */
@@ -572,8 +634,7 @@ public class Board
     }
 
     /**
-     * This is the last step of the MiniMax algorithm, it does the actual move
-     * of the token
+     * This is the last step of the MiniMax algorithm, it does the actual move of the token
      *
      * @param mBestMove
      */

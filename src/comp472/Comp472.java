@@ -11,7 +11,8 @@ package comp472;
 public class Comp472
 {
     //Depth needs to be a minimum of 1
-    static final int DEPTH =3;//;
+
+    static final int DEPTH = 4;//;
 
     /**
      * @param args the command line arguments
@@ -22,17 +23,42 @@ public class Comp472
         int mode = mOption.displayGameOptions();
         Board mBoard = new Board();
 
-        int count=0;
+        int count = 0;
         switch (mode)
         {
             case 1:
+//                while (!mBoard.doesWinnderExists())
+//                {
+//                    Token mToken = mBoard.getUserMove();
+//                    if (mToken != null)
+//                    {
+//                        while (!mBoard.addToken(mToken))
+//                        {
+//                            mToken = mBoard.getUserMove();
+//                        }
+//                    }
+//                    if(mBoard.doesWinnderExists())
+//                    {
+//                        break;
+//                    }
+//
+//                    mToken =mBoard.getUserMove();
+//                    if (mToken != null)
+//                    {
+//                        while (!mBoard.addToken(mToken))
+//                        {
+//                            mToken = mBoard.getUserMove();
+//                        }
+//                    }
+//
+//                }
 
                 while (!mBoard.doesWinnderExists())
                 {
                     count++;
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
-                    System.out.println("Finally Chosen: " + mBestMove.getStrength());
+                    //System.out.println("Finally Chosen: " + mBestMove.getStrength());
                     //System.out.println("Nth etaration: "+count);
                     mBoard.realMove(mBestMove);
                 }
