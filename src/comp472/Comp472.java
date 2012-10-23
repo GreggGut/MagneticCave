@@ -56,11 +56,10 @@ public class Comp472
                 //
                 while (!mBoard.doesWinnderExists())
                 {
-                    count++;
+                    //count++;
+
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
-                    //System.out.println("Finally Chosen: " + mBestMove.getStrength());
-                    //System.out.println("Nth etaration: "+count);
                     mBoard.realMove(mBestMove);
                 }
                 break;

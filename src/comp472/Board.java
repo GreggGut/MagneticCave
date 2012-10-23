@@ -147,74 +147,62 @@ public class Board
      */
     public int checkForWinner()
     {
-        displayBoard();
+
         //int whichPlayer = 1;
         String winner;
         if (player == 1)
         {
+            System.out.println("After Black turn:");
             winner = "Black";
         }
         else
         {
+            System.out.println("After White turn:");
             winner = "White";
         }
+        displayBoard();
         for (int col = 0; col < COL; col++)
         {
             for (int row = 0; row < ROW; row++)
             {
                 //Checking for vertical wins
-                if (row < 4)
+                if (checkVerticalWin(col, row, player))
                 {
-                    if (tokenPlacements[col][row] == player && tokenPlacements[col][row + 1] == player && tokenPlacements[col][row + 2] == player && tokenPlacements[col][row + 3] == player && tokenPlacements[col][row + 4] == player)
-                    {
-                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end row " + (row + 5) + " Player " + winner + " wins!");
-                        System.out.println("Vertical win");
-                        winnderExists = true;
-                        return player;
-                    }
+                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end row " + (row + 5) + " Player " + winner + " wins!");
+                    System.out.println("Vertical win");
+                    winnderExists = true;
+                    return player;
                 }
 
+
                 //checking for horizontal wins
-                if (col < 4)
+                if (checkHorizontalWin(col, row, player))
                 {
-                    if (tokenPlacements[col][row] == player && tokenPlacements[col + 1][row] == player && tokenPlacements[col + 2][row] == player && tokenPlacements[col + 3][row] == player && tokenPlacements[col + 4][row] == player)
-                    {
-                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " Player " + winner + " wins!");
-                        System.out.println("Horizontal win");
-                        winnderExists = true;
-                        return player;
-                    }
+                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " Player " + winner + " wins!");
+                    System.out.println("Horizontal win");
+                    winnderExists = true;
+                    return player;
                 }
 
                 //checking for diagonal win from bottom left to upper right
-                if (row < 4 && col < 4)
+                if (checkDiagonalWin1(col, row, player))
                 {
-                    if (tokenPlacements[col][row] == player && tokenPlacements[col + 1][row + 1] == player && tokenPlacements[col + 2][row + 2] == player && tokenPlacements[col + 3][row + 3] == player && tokenPlacements[col + 4][row + 4] == player)
-                    {
-                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
-                        System.out.println("Diagonal win, bottom left to upper right");
-                        winnderExists = true;
-                        return player;
-                    }
-
+                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
+                    System.out.println("Diagonal win, bottom left to upper right");
+                    winnderExists = true;
+                    return player;
                 }
 
                 //checking for diagonal win from bottom right to upper left
-                if (row > 3 && col < 4)
+                if (checkDiagonalWin2(col, row, player))
                 {
-                    if (tokenPlacements[col][row] == player && tokenPlacements[col + 1][row - 1] == player && tokenPlacements[col + 2][row - 2] == player && tokenPlacements[col + 3][row - 3] == player && tokenPlacements[col + 4][row - 4] == player)
-                    {
-                        System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
-                        System.out.println("Diagonal win, bottom right to upper left");
-                        winnderExists = true;
-                        return player;
-                    }
-
+                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
+                    System.out.println("Diagonal win, bottom right to upper left");
+                    winnderExists = true;
+                    return player;
                 }
-
             }
         }
-
 
         nextPlayer();
         if (!isBoardFull())
@@ -223,6 +211,79 @@ public class Board
         }
 
         return 0;
+    }
+
+    boolean checkForPossibleWinner(int who)
+    {
+        for (int col = 0; col < COL; col++)
+        {
+            for (int row = 0; row < ROW; row++)
+            {
+                //Checking for vertical wins
+                if (checkVerticalWin(col, row, who))
+                {
+                    return true;
+                }
+
+
+                //checking for horizontal wins
+                if (checkHorizontalWin(col, row, who))
+                {
+                    return true;
+                }
+
+                //checking for diagonal win from bottom left to upper right
+                if (checkDiagonalWin1(col, row, who))
+                {
+                    return true;
+                }
+
+                //checking for diagonal win from bottom right to upper left
+                if (checkDiagonalWin2(col, row, who))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean checkVerticalWin(int col, int row, int who)
+    {
+        if (row < 4 && tokenPlacements[col][row] == who && tokenPlacements[col][row + 1] == who && tokenPlacements[col][row + 2] == who && tokenPlacements[col][row + 3] == who && tokenPlacements[col][row + 4] == who)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    boolean checkHorizontalWin(int col, int row, int who)
+    {
+        if (col < 4 && tokenPlacements[col][row] == who && tokenPlacements[col + 1][row] == who && tokenPlacements[col + 2][row] == who && tokenPlacements[col + 3][row] == who && tokenPlacements[col + 4][row] == who)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    boolean checkDiagonalWin1(int col, int row, int who)
+    {
+        if (row < 4 && col < 4 && tokenPlacements[col][row] == who && tokenPlacements[col + 1][row + 1] == who && tokenPlacements[col + 2][row + 2] == who && tokenPlacements[col + 3][row + 3] == who && tokenPlacements[col + 4][row + 4] == who)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    boolean checkDiagonalWin2(int col, int row, int who)
+    {
+        if (row > 3 && col < 4 && tokenPlacements[col][row] == who && tokenPlacements[col + 1][row - 1] == who && tokenPlacements[col + 2][row - 2] == who && tokenPlacements[col + 3][row - 3] == who && tokenPlacements[col + 4][row - 4] == who)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -373,6 +434,15 @@ public class Board
 
                 int col = tryMove(row, false, player);
                 int strength = getMinNodes(depth - 1, maxStrength);
+                if (checkForPossibleWinner(player))
+                {
+                    //maxStrength = Integer.MAX_VALUE;
+                    mBestMove.setRow(row);
+                    mBestMove.setCol(col);
+                    mBestMove.setStrength(strength);
+                    undoTryMove(col, row);
+                    return mBestMove;
+                }
                 if (strength >= maxStrength)
                 {
                     //System.out.println("Better");
@@ -393,6 +463,15 @@ public class Board
 
                 int col = tryMove(row, true, player);
                 int strength = getMinNodes(depth - 1, maxStrength);
+                if (checkForPossibleWinner(player))
+                {
+                    //maxStrength = Integer.MAX_VALUE;
+                    mBestMove.setRow(row);
+                    mBestMove.setCol(col);
+                    mBestMove.setStrength(strength);
+                    undoTryMove(col, row);
+                    return mBestMove;
+                }
                 if (strength >= maxStrength)
                 {
                     //System.out.println("Better");
@@ -448,6 +527,12 @@ public class Board
             {
                 int col = tryMove(row, false, player);
                 int strength = getMinNodes(depth - 1, max);
+
+                //Testing now
+                if (checkForPossibleWinner(player))
+                {
+                    strength = Integer.MAX_VALUE;
+                }
                 //System.out.print(strength + " ");
                 if (strength > min)
                 {
@@ -467,6 +552,11 @@ public class Board
             {
                 int col = tryMove(row, true, player);
                 int strength = getMinNodes(depth - 1, max);
+                //Testing now
+                if (checkForPossibleWinner(player))
+                {
+                    strength = Integer.MAX_VALUE;
+                }
                 //System.out.print(strength + " ");
                 if (strength > min)
                 {
@@ -519,6 +609,11 @@ public class Board
             {
                 int col = tryMove(row, false, mPlayer);
                 int strength = getMaxNodes(depth - 1, min);
+                //Testing now
+                if (checkForPossibleWinner(mPlayer))
+                {
+                    strength = Integer.MIN_VALUE;
+                }
                 //System.out.print(strength + " ");
                 if (strength < max)
                 {
@@ -538,6 +633,11 @@ public class Board
             {
                 int col = tryMove(row, true, mPlayer);
                 int strength = getMaxNodes(depth - 1, min);
+                //Testing now
+                if (checkForPossibleWinner(mPlayer))
+                {
+                    strength = Integer.MIN_VALUE;
+                }
                 //System.out.print(strength + " ");
                 if (strength < max)
                 {
@@ -563,9 +663,177 @@ public class Board
      */
     private int heuristic()
     {
-        int toReturn = randomGenerator.nextInt(1000);
+        int me = player;
+        int opponent;
+        if (me == 1)
+        {
+            opponent = 2;
+        }
+        else
+        {
+            opponent = 1;
+        }
+
+        int score = 0;
+        /*
+         * Points given as follows:
+         * 1        - 1 token
+         * 10       - 2 tokens
+         * 100      - 3 tokens
+         * 1000     - 4 tokens
+         * 10000    - 5 tokens
+         */
+        for (int col = 0; col < COL; col++)
+        {
+            for (int row = 0; row < ROW; row++)
+            {
+                //Me vertical
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkVertical(col, row, me, series))
+                    {
+                        score += 10 ^ (series - 1);
+                    }
+                }
+
+                //Opponent vertical
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkVertical(col, row, opponent, series))
+                    {
+                        score -= 10 ^ (series - 1);
+                    }
+                }
+
+                //Me horizontal
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkHorizontal(col, row, me, series))
+                    {
+                        score += 10 ^ (series - 1);
+                    }
+                }
+
+                //Opponent horizontal
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkHorizontal(col, row, opponent, series))
+                    {
+                        score -= 10 ^ (series - 1);
+                    }
+                }
+
+                //Me diagonal 1
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkDiagonal1(col, row, me, series))
+                    {
+                        score += 10 ^ (series - 1);
+                    }
+                }
+
+                //Opponent diagonal 1
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkDiagonal1(col, row, opponent, series))
+                    {
+                        score -= 10 ^ (series - 1);
+                    }
+                }
+
+                //Me diagonal 2
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkDiagonal2(col, row, me, series))
+                    {
+                        score += 10 ^ (series - 1);
+                    }
+                }
+
+                //Opponent diagonal 2
+                for (int series = 1; series < 6; series++)
+                {
+                    if (checkDiagonal2(col, row, opponent, series))
+                    {
+                        score -= 10 ^ (series - 1);
+                    }
+                }
+
+            }
+        }
+        //int toReturn = randomGenerator.nextInt(1000);
         //System.out.print(toReturn+" ");
-        return toReturn;
+        return score;
+    }
+
+    boolean checkVertical(int col, int row, int who, int height)
+    {
+        for (int i = 0; i < height; i++)
+        {
+            int mRow = row + i;
+            if (mRow > ROW - 1)
+            {
+                return false;
+            }
+            if (tokenPlacements[col][mRow] != who)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean checkHorizontal(int col, int row, int who, int height)
+    {
+        for (int i = 0; i < height; i++)
+        {
+            int mCol = col + i;
+            if (mCol > COL - 1)
+            {
+                return false;
+            }
+            if (tokenPlacements[mCol][row] != who)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean checkDiagonal1(int col, int row, int who, int height)
+    {
+        for (int i = 0; i < height; i++)
+        {
+            int mCol = col + i;
+            int mRow = row + i;
+            if ((mCol > COL - 1) || mRow > ROW - 1)
+            {
+                return false;
+            }
+            if (tokenPlacements[mCol][mRow] != who)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean checkDiagonal2(int col, int row, int who, int height)
+    {
+        for (int i = 0; i < height; i++)
+        {
+            int mCol = col + i;
+            int mRow = row - i;
+            if ((mCol > COL - 1) || (mRow < 0))
+            {
+                return false;
+            }
+            if (tokenPlacements[mCol][mRow] != who)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -645,5 +913,10 @@ public class Board
 
         tokenPlacements[mBestMove.getCol()][mBestMove.getRow()] = player;
         checkForWinner();
+    }
+
+    int getPlayer()
+    {
+        return player;
     }
 }
