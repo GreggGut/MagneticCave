@@ -513,7 +513,7 @@ public class Board
      */
     public int getMaxNodes(int depth, int min)
     {
-        if (depth == 0)
+        if (depth == 0)// || isBoardFull())
         {
             return heuristic();
         }
@@ -584,7 +584,7 @@ public class Board
      */
     private int getMinNodes(int depth, int max)
     {
-        if (depth == 0)
+        if (depth == 0)// || isBoardFull())
         {
             return heuristic();
         }
@@ -612,7 +612,9 @@ public class Board
                 //Testing now
                 if (checkForPossibleWinner(mPlayer))
                 {
-                    strength = Integer.MIN_VALUE;
+                    //strength = Integer.MIN_VALUE;
+                    undoTryMove(col, row);
+                    return Integer.MIN_VALUE;
                 }
                 //System.out.print(strength + " ");
                 if (strength < max)
@@ -636,7 +638,9 @@ public class Board
                 //Testing now
                 if (checkForPossibleWinner(mPlayer))
                 {
-                    strength = Integer.MIN_VALUE;
+                    //strength = Integer.MIN_VALUE;
+                    undoTryMove(col, row);
+                    return Integer.MIN_VALUE;
                 }
                 //System.out.print(strength + " ");
                 if (strength < max)
@@ -675,94 +679,278 @@ public class Board
         }
 
         int score = 0;
-        /*
-         * Points given as follows:
-         * 1        - 1 token
-         * 10       - 2 tokens
-         * 100      - 3 tokens
-         * 1000     - 4 tokens
-         * 10000    - 5 tokens
-         */
+
         for (int col = 0; col < COL; col++)
         {
+            //int points = 0;
             for (int row = 0; row < ROW; row++)
             {
-                //Me vertical
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkVertical(col, row, me, series))
-                    {
-                        score += 10 ^ (series - 1);
-                    }
-                }
+                //System.out.println("Score: " + score);
+                score += verticalScoreUp(col, row, player);
+                score -= 10 * (verticalScoreUp(col, row, opponent));
+                score += verticalScoreDown(col, row, player);
+                score -= 10 * (verticalScoreDown(col, row, opponent));
 
-                //Opponent vertical
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkVertical(col, row, opponent, series))
-                    {
-                        score -= 10 ^ (series - 1);
-                    }
-                }
+                score += horizontalScoreRight(col, row, player);
+                score -= 10 * (horizontalScoreRight(col, row, opponent));
+                score += horizontalScoreLeft(col, row, player);
+                score -= 10 * (horizontalScoreLeft(col, row, opponent));
 
-                //Me horizontal
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkHorizontal(col, row, me, series))
-                    {
-                        score += 10 ^ (series - 1);
-                    }
-                }
+                score += diagonalScore1Up(col, row, player);
+                score -= 10 * (diagonalScore1Up(col, row, opponent));
+                score += diagonalScore1Down(col, row, player);
+                score -= 10 * (diagonalScore1Down(col, row, opponent));
 
-                //Opponent horizontal
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkHorizontal(col, row, opponent, series))
-                    {
-                        score -= 10 ^ (series - 1);
-                    }
-                }
+                score += diagonalScore2Up(col, row, player);
+                score -= 10 * (diagonalScore2Up(col, row, opponent));
+                score += diagonalScore2Down(col, row, player);
+                score -= 10 * (diagonalScore2Down(col, row, opponent));
 
-                //Me diagonal 1
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkDiagonal1(col, row, me, series))
-                    {
-                        score += 10 ^ (series - 1);
-                    }
-                }
-
-                //Opponent diagonal 1
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkDiagonal1(col, row, opponent, series))
-                    {
-                        score -= 10 ^ (series - 1);
-                    }
-                }
-
-                //Me diagonal 2
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkDiagonal2(col, row, me, series))
-                    {
-                        score += 10 ^ (series - 1);
-                    }
-                }
-
-                //Opponent diagonal 2
-                for (int series = 1; series < 6; series++)
-                {
-                    if (checkDiagonal2(col, row, opponent, series))
-                    {
-                        score -= 10 ^ (series - 1);
-                    }
-                }
 
             }
         }
-        //int toReturn = randomGenerator.nextInt(1000);
-        //System.out.print(toReturn+" ");
+        return score;
+    }
+
+    int getPossibleScore(int col, int row, int who)
+    {
+        int score = 0;
+
+
+        return score;
+    }
+
+    int verticalScoreUp(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if (row + 4 < ROW)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col][row + i] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col][row + i] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int verticalScoreDown(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if (row - 4 > -1)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col][row - i] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col][row - i] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int horizontalScoreRight(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if (col + 4 < COL)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col + i][row] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col + i][row] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int horizontalScoreLeft(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if (col - 4 > -1)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col - i][row] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col - i][row] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int diagonalScore1Up(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if ((col + 4 < COL) && (row + 4 < ROW))
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col + i][row + i] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col + i][row + i] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int diagonalScore1Down(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if ((col - 4 > -1) && (row - 4 > -1))
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col - i][row - i] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col - i][row - i] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int diagonalScore2Up(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if ((col - 4 > -1) && (row + 4 < ROW))
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col - i][row + i] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col - i][row + i] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int diagonalScore2Down(int col, int row, int who)
+    {
+        int myTokens = 0;
+        if ((col + 4 < COL) && (row - 4 > -1))
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (tokenPlacements[col + i][row - i] == who)
+                {
+                    myTokens++;
+                }
+                else if (tokenPlacements[col + i][row - i] != 0)
+                {
+                    return 0;
+                }
+            }
+        }
+        else
+        {
+            return 0;
+        }
+
+        return (int) java.lang.Math.pow(10, myTokens - 1);
+    }
+
+    int checkHorizolScore(int col, int row, int who)
+    {
+        int score = 0;
+        for (int i = row; i < ROW; i++)
+        {
+            if (tokenPlacements[col][i] == who)
+            {
+                score++;
+            }
+            else
+            {
+                return score;
+            }
+        }
+        return score;
+    }
+
+    int checkHorizontalScore(int col, int row, int who)
+    {
+        int score = 0;
+        for (int i = col; i < COL; i++)
+        {
+            if (tokenPlacements[i][row] == who)
+            {
+                score++;
+            }
+            else
+            {
+                return score;
+            }
+        }
         return score;
     }
 

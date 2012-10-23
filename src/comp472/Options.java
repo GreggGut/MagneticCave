@@ -33,13 +33,14 @@ public class Options
             System.out.println("1 - Manual entry for both players");
             System.out.println("2 - Manual entry for player 1 moves & automatic moves for player 2 moves");
             System.out.println("3 - Manual entry for player 2 moves & automatic moves for player 1 moves");
+            System.out.println("4 - Full automatic play");
 
             try
             {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 mode = Integer.parseInt(br.readLine());
                 //System.out.println("Mode: " + mode);
-                if (mode > 0 && mode < 4)
+                if (mode > 0 && mode < 5)
                 {
                     return mode;
                 }
