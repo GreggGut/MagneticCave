@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class Board
 {
-
+    private final int DEFENCE=2;
     private final short COL = 8;
     private final short ROW = 8;
     private Random randomGenerator = new Random();
@@ -92,8 +92,14 @@ public class Board
                     System.out.print("W ");
                 }
             }
+            System.out.print((row + 1));
+            if (row == 0)
+            {
+                break;
+            }
             System.out.print('\n');
         }
+        System.out.println("\n  A B C D E F G H");
     }
 
     /**
@@ -209,6 +215,10 @@ public class Board
         {
             return -1;
         }
+        else
+        {
+            winnderExists = true;
+        }
 
         return 0;
     }
@@ -303,7 +313,7 @@ public class Board
                 }
             }
         }
-        winnderExists = true;
+        //winnderExists = true;
         return true;
     }
 
@@ -332,31 +342,39 @@ public class Board
      */
     public Token getUserMove()
     {
-        try
+        while (true)
         {
-            String playerC;
-            if (player == 1)
+            try
             {
-                playerC = "Black";
+                String playerC;
+                if (player == 1)
+                {
+                    playerC = "Black";
+                }
+                else
+                {
+                    playerC = "White";
+                }
+                System.out.println("Player " + player + " (" + playerC + ") turn. (eg. A1)");
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                char mXc = (char) br.read();
+                int mY = (int) (br.read());
+
+                Token mToken = convertToToken(mXc, mY);
+                if(mToken==null)
+                {
+                    continue;
+                }
+                return mToken;
             }
-            else
+            catch (IOException ex)
             {
-                playerC = "White";
+                Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("Player " + player + " (" + playerC + ") turn. (eg. A1)");
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            char mXc = (char) br.read();
-            int mY = (int) (br.read());
-
-            Token mToken = convertToToken(mXc, mY);
-            return mToken;
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return null;
+
+        //return null;
     }
 
     /**
@@ -584,7 +602,7 @@ public class Board
      */
     private int getMinNodes(int depth, int max)
     {
-        if (depth == 0)// || isBoardFull())
+        if (depth == 0 || isBoardFull())
         {
             return heuristic();
         }
@@ -687,24 +705,24 @@ public class Board
             {
                 //System.out.println("Score: " + score);
                 score += verticalScoreUp(col, row, player);
-                score -= 10 * (verticalScoreUp(col, row, opponent));
+                score -= DEFENCE * (verticalScoreUp(col, row, opponent));
                 score += verticalScoreDown(col, row, player);
-                score -= 10 * (verticalScoreDown(col, row, opponent));
+                score -= DEFENCE * (verticalScoreDown(col, row, opponent));
 
                 score += horizontalScoreRight(col, row, player);
-                score -= 10 * (horizontalScoreRight(col, row, opponent));
+                score -= DEFENCE * (horizontalScoreRight(col, row, opponent));
                 score += horizontalScoreLeft(col, row, player);
-                score -= 10 * (horizontalScoreLeft(col, row, opponent));
+                score -= DEFENCE * (horizontalScoreLeft(col, row, opponent));
 
                 score += diagonalScore1Up(col, row, player);
-                score -= 10 * (diagonalScore1Up(col, row, opponent));
+                score -= DEFENCE * (diagonalScore1Up(col, row, opponent));
                 score += diagonalScore1Down(col, row, player);
-                score -= 10 * (diagonalScore1Down(col, row, opponent));
+                score -= DEFENCE * (diagonalScore1Down(col, row, opponent));
 
                 score += diagonalScore2Up(col, row, player);
-                score -= 10 * (diagonalScore2Up(col, row, opponent));
+                score -= DEFENCE * (diagonalScore2Up(col, row, opponent));
                 score += diagonalScore2Down(col, row, player);
-                score -= 10 * (diagonalScore2Down(col, row, opponent));
+                score -= DEFENCE * (diagonalScore2Down(col, row, opponent));
 
 
             }
@@ -920,110 +938,6 @@ public class Board
         return (int) java.lang.Math.pow(10, myTokens - 1);
     }
 
-    int checkHorizolScore(int col, int row, int who)
-    {
-        int score = 0;
-        for (int i = row; i < ROW; i++)
-        {
-            if (tokenPlacements[col][i] == who)
-            {
-                score++;
-            }
-            else
-            {
-                return score;
-            }
-        }
-        return score;
-    }
-
-    int checkHorizontalScore(int col, int row, int who)
-    {
-        int score = 0;
-        for (int i = col; i < COL; i++)
-        {
-            if (tokenPlacements[i][row] == who)
-            {
-                score++;
-            }
-            else
-            {
-                return score;
-            }
-        }
-        return score;
-    }
-
-    boolean checkVertical(int col, int row, int who, int height)
-    {
-        for (int i = 0; i < height; i++)
-        {
-            int mRow = row + i;
-            if (mRow > ROW - 1)
-            {
-                return false;
-            }
-            if (tokenPlacements[col][mRow] != who)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    boolean checkHorizontal(int col, int row, int who, int height)
-    {
-        for (int i = 0; i < height; i++)
-        {
-            int mCol = col + i;
-            if (mCol > COL - 1)
-            {
-                return false;
-            }
-            if (tokenPlacements[mCol][row] != who)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    boolean checkDiagonal1(int col, int row, int who, int height)
-    {
-        for (int i = 0; i < height; i++)
-        {
-            int mCol = col + i;
-            int mRow = row + i;
-            if ((mCol > COL - 1) || mRow > ROW - 1)
-            {
-                return false;
-            }
-            if (tokenPlacements[mCol][mRow] != who)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    boolean checkDiagonal2(int col, int row, int who, int height)
-    {
-        for (int i = 0; i < height; i++)
-        {
-            int mCol = col + i;
-            int mRow = row - i;
-            if ((mCol > COL - 1) || (mRow < 0))
-            {
-                return false;
-            }
-            if (tokenPlacements[mCol][mRow] != who)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Check is a token can be placed in a given row
      *
@@ -1097,7 +1011,41 @@ public class Board
     public void realMove(BestMove mBestMove)
     {
         //Testing final choice
-        System.out.println("col " + mBestMove.getCol() + " row " + mBestMove.getRow() + " strenght: " + mBestMove.getStrength());
+        char mCol;
+        if (mBestMove.getCol() == 0)
+        {
+            mCol = 'A';
+        }
+        else if (mBestMove.getCol() == 1)
+        {
+            mCol = 'B';
+        }
+        else if (mBestMove.getCol() == 2)
+        {
+            mCol = 'C';
+        }
+        else if (mBestMove.getCol() == 3)
+        {
+            mCol = 'D';
+        }
+        else if (mBestMove.getCol() == 4)
+        {
+            mCol = 'E';
+        }
+        else if (mBestMove.getCol() == 5)
+        {
+            mCol = 'F';
+        }
+        else if (mBestMove.getCol() == 6)
+        {
+            mCol = 'G';
+        }
+        else
+        {
+            mCol = 'H';
+        }
+        System.out.println("My move: " + mCol + (mBestMove.getRow() + 1));
+        ////// + mBestMove.getStrength());
 
         tokenPlacements[mBestMove.getCol()][mBestMove.getRow()] = player;
         checkForWinner();
