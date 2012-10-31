@@ -111,7 +111,8 @@ public class Comp472
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     mBoard.realMove(mBestMove);
-                    
+               
+                    //
 //                    if(mBoard.doesWinnderExists())
 //                    {
 //                        break;
