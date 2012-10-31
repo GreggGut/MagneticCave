@@ -19,11 +19,7 @@ public class Comp472
      */
     public static void main(String[] args)
     {
-        System.out.println(10 ^ -1);
-        System.out.println(10 ^ 0);
-        System.out.println(10 ^ 1);
-        System.out.println(10 ^ 2);
-
+        
         Options mOption = new Options();
         int mode = mOption.displayGameOptions();
         Board mBoard = new Board();
@@ -70,6 +66,10 @@ public class Comp472
                             mToken = mBoard.getUserMove();
                         }
                     }
+                    if(mBoard.doesWinnderExists())
+                    {
+                        break;
+                    }
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     System.out.println("Chosen: " + mBestMove.getStrength());
@@ -85,6 +85,11 @@ public class Comp472
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     System.out.println("Chosen: " + mBestMove.getStrength());
                     mBoard.realMove(mBestMove);
+                    
+                    if(mBoard.doesWinnderExists())
+                    {
+                        break;
+                    }
 
                     Token mToken = mBoard.getUserMove();
                     if (mToken != null)
@@ -97,7 +102,7 @@ public class Comp472
                 }
                 break;
             case 4:
-                int iteration=0;
+                int iteration = 0;
                 while (!mBoard.doesWinnderExists())
                 {
                     //count++;
@@ -105,6 +110,13 @@ public class Comp472
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     mBoard.realMove(mBestMove);
+                    
+//                    if(mBoard.doesWinnderExists())
+//                    {
+//                        break;
+//                    }
+//                    BestMove nextmove=mBoard.randomMove();
+//                    mBoard.realMove(nextmove);
                 }
                 break;
         }

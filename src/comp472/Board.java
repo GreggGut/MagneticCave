@@ -11,13 +11,15 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+//Test
 /**
  *
  * @author Grzegorz Gut
  */
 public class Board
 {
-    private final int DEFENCE=2;
+
+    private final int DEFENCE = 2;
     private final short COL = 8;
     private final short ROW = 8;
     private Random randomGenerator = new Random();
@@ -361,7 +363,7 @@ public class Board
                 int mY = (int) (br.read());
 
                 Token mToken = convertToToken(mXc, mY);
-                if(mToken==null)
+                if (mToken == null)
                 {
                     continue;
                 }
@@ -1051,8 +1053,31 @@ public class Board
         checkForWinner();
     }
 
-    int getPlayer()
+//    int getPlayer()
+//    {
+//        return player;
+//    }
+    
+    Random generator = new Random();
+
+    public BestMove randomMove()
     {
-        return player;
+        BestMove b = new BestMove();
+        
+        boolean side = generator.nextBoolean();
+        int row = generator.nextInt(ROW-1);
+        
+        int result=-1;
+        while(result==-1)
+        {
+            result = tryMove(row, side, player);
+        }
+        
+        b.setCol(result);
+        b.setRow(row);
+        //(int row, boolean leftRight, int mPlayer
+        
+        
+        return b;
     }
 }
