@@ -435,7 +435,7 @@ public class Board
             return mToken;
         }
 
-        System.out.println("Wrong entry..." + x + " " + y);
+        System.out.println("Wrong entry...");// + x + " " + y);
         return null;
     }
 
