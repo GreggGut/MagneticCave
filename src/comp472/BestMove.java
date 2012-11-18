@@ -5,17 +5,21 @@
 package comp472;
 
 /**
+ * This class is used to keep track of the player best move as chosen by the minimax
  *
  * @author Greg
  */
 public class BestMove
 {
 
+    /**
+     * Default constructor
+     */
     BestMove()
     {
-        row=-1;
-        col=-1;
-        strength=Integer.MIN_VALUE;
+        row = -1;
+        col = -1;
+        strength = Integer.MIN_VALUE;
     }
     private int row;
     private int col;

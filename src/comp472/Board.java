@@ -11,8 +11,8 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//Test
 /**
+ * This is the actual board of the game. It contains the minimax, check for any player win, and all possible moves
  *
  * @author Grzegorz Gut
  */
@@ -1052,32 +1052,30 @@ public class Board
         tokenPlacements[mBestMove.getCol()][mBestMove.getRow()] = player;
         checkForWinner();
     }
-
 //    int getPlayer()
 //    {
 //        return player;
 //    }
-    
     Random generator = new Random();
 
     public BestMove randomMove()
     {
         BestMove b = new BestMove();
-        
+
         boolean side = generator.nextBoolean();
-        int row = generator.nextInt(ROW-1);
-        
-        int result=-1;
-        while(result==-1)
+        int row = generator.nextInt(ROW - 1);
+
+        int result = -1;
+        while (result == -1)
         {
             result = tryMove(row, side, player);
         }
-        
+
         b.setCol(result);
         b.setRow(row);
         //(int row, boolean leftRight, int mPlayer
-        
-        
+
+
         return b;
     }
 }

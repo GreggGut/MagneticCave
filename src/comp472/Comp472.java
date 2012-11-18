@@ -5,12 +5,9 @@
 package comp472;
 
 //Test 2
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -27,7 +24,7 @@ public class Comp472
      */
     public static void main(String[] args)
     {
-        
+
         //Options mOption = new Options();
         int mode = displayGameOptions(); ///*mOption.*/
         Board mBoard = new Board();
@@ -74,7 +71,7 @@ public class Comp472
                             mToken = mBoard.getUserMove();
                         }
                     }
-                    if(mBoard.doesWinnderExists())
+                    if (mBoard.doesWinnderExists())
                     {
                         break;
                     }
@@ -93,8 +90,8 @@ public class Comp472
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     //System.out.println("Chosen: " + mBestMove.getStrength());
                     mBoard.realMove(mBestMove);
-                    
-                    if(mBoard.doesWinnderExists())
+
+                    if (mBoard.doesWinnderExists())
                     {
                         break;
                     }
@@ -122,7 +119,12 @@ public class Comp472
                 break;
         }
     }
-    
+
+    /**
+     * Displays the menu available to the user
+     *
+     * @return
+     */
     public static int displayGameOptions()
     {
 
@@ -130,6 +132,10 @@ public class Comp472
         System.out.println("Magnetic Cave");
         System.out.println();
         System.out.println();
+
+        /**
+         * This will loop until the user chooses a valid game option
+         */
         while (true)
         {
             System.out.println("Please choose mode of play");
@@ -150,7 +156,7 @@ public class Comp472
                 System.out.println(mode + " is not a valid choice, try again\n");
             }
             catch (IOException | NumberFormatException ex)
-            {  
+            {
             }
         }
     }
