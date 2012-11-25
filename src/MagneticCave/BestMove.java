@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package comp472;
+package MagneticCave;
 
 /**
  * This class is used to keep track of the player best move as chosen by the minimax

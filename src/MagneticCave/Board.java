@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package comp472;
+package MagneticCave;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 public class Board
 {
 
-    private final int DEFENCE = 2;
+    private int defense; //EFENCE = 2;
+    private int attack;
     private final short COL = 8;
     private final short ROW = 8;
     private Random randomGenerator = new Random();
@@ -32,8 +33,10 @@ public class Board
     private int player = 1; //can only be 1 or 2
     private boolean winnderExists = false;
 
-    Board()
+    Board(int a, int d)
     {
+        defense = d;
+        attack = a;
         initTokens();
     }
 
@@ -160,12 +163,12 @@ public class Board
         String winner;
         if (player == 1)
         {
-            System.out.println("After Black turn:");
+            //System.out.println("After Black turn:");
             winner = "Black";
         }
         else
         {
-            System.out.println("After White turn:");
+            //System.out.println("After White turn:");
             winner = "White";
         }
         displayBoard();
@@ -236,7 +239,6 @@ public class Board
                 {
                     return true;
                 }
-
 
                 //checking for horizontal wins
                 if (checkHorizontalWin(col, row, who))
@@ -572,16 +574,15 @@ public class Board
             {
                 int col = tryMove(row, true, player);
                 int strength = getMinNodes(depth - 1, max);
-                //Testing now
+
                 if (checkForPossibleWinner(player))
                 {
                     strength = Integer.MAX_VALUE;
                 }
-                //System.out.print(strength + " ");
+
                 if (strength > min)
                 {
                     undoTryMove(col, row);
-                    //System.out.println("Chosen max (alpha-beta): " + strength+" ");
                     return strength;
                 }
                 if (strength > max)
@@ -591,7 +592,7 @@ public class Board
                 undoTryMove(col, row);
             }
         }
-        //System.out.println("\nChosen max: " + max+" ");
+
         return max;
     }
 
@@ -629,17 +630,15 @@ public class Board
             {
                 int col = tryMove(row, false, mPlayer);
                 int strength = getMaxNodes(depth - 1, min);
-                //Testing now
+
                 if (checkForPossibleWinner(mPlayer))
                 {
-                    //strength = Integer.MIN_VALUE;
                     undoTryMove(col, row);
                     return Integer.MIN_VALUE;
                 }
-                //System.out.print(strength + " ");
+
                 if (strength < max)
                 {
-                    //System.out.print("Chosen min (alpha-beta): "+strength+" ");
                     undoTryMove(col, row);
                     return strength;
                 }
@@ -655,17 +654,14 @@ public class Board
             {
                 int col = tryMove(row, true, mPlayer);
                 int strength = getMaxNodes(depth - 1, min);
-                //Testing now
+
                 if (checkForPossibleWinner(mPlayer))
                 {
-                    //strength = Integer.MIN_VALUE;
                     undoTryMove(col, row);
                     return Integer.MIN_VALUE;
                 }
-                //System.out.print(strength + " ");
                 if (strength < max)
                 {
-                    //System.out.print("Chosen min (alpha-beta): "+strength+" ");
                     undoTryMove(col, row);
                     return strength;
                 }
@@ -676,7 +672,6 @@ public class Board
                 undoTryMove(col, row);
             }
         }
-        //System.out.println("\nChosen min: "+min+" ");
         return min;
     }
 
@@ -702,29 +697,28 @@ public class Board
 
         for (int col = 0; col < COL; col++)
         {
-            //int points = 0;
+
             for (int row = 0; row < ROW; row++)
             {
-                //System.out.println("Score: " + score);
-                score += verticalScoreUp(col, row, player);
-                score -= DEFENCE * (verticalScoreUp(col, row, opponent));
-                score += verticalScoreDown(col, row, player);
-                score -= DEFENCE * (verticalScoreDown(col, row, opponent));
+                score += attack * verticalScoreUp(col, row, player);
+                score -= defense * (verticalScoreUp(col, row, opponent));
+                score += attack * verticalScoreDown(col, row, player);
+                score -= defense * (verticalScoreDown(col, row, opponent));
 
-                score += horizontalScoreRight(col, row, player);
-                score -= DEFENCE * (horizontalScoreRight(col, row, opponent));
-                score += horizontalScoreLeft(col, row, player);
-                score -= DEFENCE * (horizontalScoreLeft(col, row, opponent));
+                score += attack * horizontalScoreRight(col, row, player);
+                score -= defense * (horizontalScoreRight(col, row, opponent));
+                score += attack * horizontalScoreLeft(col, row, player);
+                score -= defense * (horizontalScoreLeft(col, row, opponent));
 
-                score += diagonalScore1Up(col, row, player);
-                score -= DEFENCE * (diagonalScore1Up(col, row, opponent));
-                score += diagonalScore1Down(col, row, player);
-                score -= DEFENCE * (diagonalScore1Down(col, row, opponent));
+                score += attack * diagonalScore1Up(col, row, player);
+                score -= defense * (diagonalScore1Up(col, row, opponent));
+                score += attack * diagonalScore1Down(col, row, player);
+                score -= defense * (diagonalScore1Down(col, row, opponent));
 
-                score += diagonalScore2Up(col, row, player);
-                score -= DEFENCE * (diagonalScore2Up(col, row, opponent));
-                score += diagonalScore2Down(col, row, player);
-                score -= DEFENCE * (diagonalScore2Down(col, row, opponent));
+                score += attack * diagonalScore2Up(col, row, player);
+                score -= defense * (diagonalScore2Up(col, row, opponent));
+                score += attack * diagonalScore2Down(col, row, player);
+                score -= defense * (diagonalScore2Down(col, row, opponent));
 
 
             }
@@ -735,7 +729,6 @@ public class Board
     int getPossibleScore(int col, int row, int who)
     {
         int score = 0;
-
 
         return score;
     }
@@ -989,8 +982,6 @@ public class Board
                 }
             }
         }
-
-        System.out.println("Should not be here!!!!");
         return -1;
     }
 
@@ -1046,16 +1037,20 @@ public class Board
         {
             mCol = 'H';
         }
-        System.out.println("My move: " + mCol + (mBestMove.getRow() + 1));
-        ////// + mBestMove.getStrength());
+
+        if (player == 1)
+        {
+            System.out.print("Board after Black moved to ");
+        }
+        else
+        {
+            System.out.print("Board after Black moved to ");
+        }
+        System.out.println("" + mCol + (mBestMove.getRow() + 1));
 
         tokenPlacements[mBestMove.getCol()][mBestMove.getRow()] = player;
         checkForWinner();
     }
-//    int getPlayer()
-//    {
-//        return player;
-//    }
     Random generator = new Random();
 
     public BestMove randomMove()
@@ -1073,9 +1068,6 @@ public class Board
 
         b.setCol(result);
         b.setRow(row);
-        //(int row, boolean leftRight, int mPlayer
-
-
         return b;
     }
 }

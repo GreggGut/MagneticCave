@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package comp472;
+package MagneticCave;
 
 //Test 2
 import java.io.BufferedReader;
@@ -17,7 +17,7 @@ public class Comp472
 {
     //Depth needs to be a minimum of 1
 
-    static final int DEPTH = 5;//;
+    static final int DEPTH = 5;
 
     /**
      * @param args the command line arguments
@@ -25,9 +25,34 @@ public class Comp472
     public static void main(String[] args)
     {
 
-        //Options mOption = new Options();
-        int mode = displayGameOptions(); ///*mOption.*/
-        Board mBoard = new Board();
+        int mode = displayGameOptions();
+        Board mBoard; //Constructor have 2 inputs: Attack coefficient and defense coefficient
+        switch (mode)
+        {
+            case 1:
+                /**
+                 * Heuristic is equally defensive as attacking
+                 */
+                mBoard = new Board(1, 1);
+                break;
+            case 2:
+                /**
+                 * The heuristic will be much more defensive then attacking
+                 */
+                mBoard = new Board(1, 5);
+                break;
+            case 3:
+                /**
+                 * The heuristic will be more defensive then attacking
+                 */
+                mBoard = new Board(5, 2);
+                break;
+            default:
+                /**
+                 * Heuristic is equally defensive as attacking
+                 */
+                mBoard = new Board(1, 12);
+        }
 
         int count = 0;
         switch (mode)
@@ -61,8 +86,12 @@ public class Comp472
                 break;
 
             case 2:
+            {
+                int iteration = 0;
                 while (!mBoard.doesWinnderExists())
                 {
+                    System.out.println("\nIteration number " + ++iteration);
+
                     Token mToken = mBoard.getUserMove();
                     if (mToken != null)
                     {
@@ -75,17 +104,21 @@ public class Comp472
                     {
                         break;
                     }
+                    System.out.println("\nIteration number " + ++iteration);
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     //System.out.println("Chosen: " + mBestMove.getStrength());
                     mBoard.realMove(mBestMove);
                 }
                 break;
-
+            }
             case 3:
-
+            {
+                int iteration = 0;
                 while (!mBoard.doesWinnderExists())
                 {
+                    System.out.println("\nIteration number " + ++iteration);
+
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     //System.out.println("Chosen: " + mBestMove.getStrength());
@@ -95,6 +128,8 @@ public class Comp472
                     {
                         break;
                     }
+
+                    System.out.println("\nIteration number " + ++iteration);
 
                     Token mToken = mBoard.getUserMove();
                     if (mToken != null)
@@ -106,17 +141,20 @@ public class Comp472
                     }
                 }
                 break;
+            }
             case 4:
+            {
                 int iteration = 0;
                 while (!mBoard.doesWinnderExists())
                 {
                     //count++;
-                    System.out.println(++iteration);
+                    System.out.println("\nIteration number " + ++iteration);
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
                     mBoard.realMove(mBestMove);
                 }
                 break;
+            }
         }
     }
 
