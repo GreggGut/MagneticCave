@@ -1,17 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package MagneticCave;
 
-//Test 2
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
  *
- * @author Greg
+ * @author Grzegorz Gut <gregg.gut@gmail.com>
+ *
  */
 public class Comp472
 {
@@ -45,13 +41,13 @@ public class Comp472
                 /**
                  * The heuristic will be more defensive then attacking
                  */
-                mBoard = new Board(5, 2);
+                mBoard = new Board(4, 5);
                 break;
             default:
                 /**
                  * Heuristic is equally defensive as attacking
                  */
-                mBoard = new Board(1, 12);
+                mBoard = new Board(1, 1);
         }
 
         int count = 0;
@@ -121,7 +117,6 @@ public class Comp472
 
                     //We cannot start with a depth of 0
                     BestMove mBestMove = mBoard.startMiniMax(DEPTH);
-                    //System.out.println("Chosen: " + mBestMove.getStrength());
                     mBoard.realMove(mBestMove);
 
                     if (mBoard.doesWinnderExists())

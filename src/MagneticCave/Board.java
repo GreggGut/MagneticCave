@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package MagneticCave;
 
 import java.io.BufferedReader;
@@ -14,12 +10,12 @@ import java.util.logging.Logger;
 /**
  * This is the actual board of the game. It contains the minimax, check for any player win, and all possible moves
  *
- * @author Grzegorz Gut
+ * @author Grzegorz Gut <gregg.gut@gmail.com>
  */
 public class Board
 {
 
-    private int defense; //EFENCE = 2;
+    private int defense;
     private int attack;
     private final short COL = 8;
     private final short ROW = 8;
@@ -33,10 +29,10 @@ public class Board
     private int player = 1; //can only be 1 or 2
     private boolean winnderExists = false;
 
-    Board(int a, int d)
+    Board(int attack, int defense)
     {
-        defense = d;
-        attack = a;
+        this.defense = defense;
+        this.attack = attack;
         initTokens();
     }
 
@@ -176,11 +172,10 @@ public class Board
         {
             for (int row = 0; row < ROW; row++)
             {
-                //Checking for vertical wins
+                //Checking for winner
                 if (checkVerticalWin(col, row, player))
                 {
-                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end row " + (row + 5) + " Player " + winner + " wins!");
-                    System.out.println("Vertical win");
+                    System.out.println(winner + " wins vertically with " + getColumn(col) + (row + 1) + " to " + getColumn(col) + (row + 5));
                     winnderExists = true;
                     return player;
                 }
@@ -189,8 +184,7 @@ public class Board
                 //checking for horizontal wins
                 if (checkHorizontalWin(col, row, player))
                 {
-                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " Player " + winner + " wins!");
-                    System.out.println("Horizontal win");
+                    System.out.println(winner + " wins horizontally with " + getColumn(col) + (row + 1) + " to " + getColumn(col + 4) + (row + 1));
                     winnderExists = true;
                     return player;
                 }
@@ -198,8 +192,7 @@ public class Board
                 //checking for diagonal win from bottom left to upper right
                 if (checkDiagonalWin1(col, row, player))
                 {
-                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
-                    System.out.println("Diagonal win, bottom left to upper right");
+                    System.out.println(winner + " wins diagonally with " + getColumn(col) + (row + 1) + " to " + getColumn(col + 4) + (row + 5));
                     winnderExists = true;
                     return player;
                 }
@@ -207,8 +200,7 @@ public class Board
                 //checking for diagonal win from bottom right to upper left
                 if (checkDiagonalWin2(col, row, player))
                 {
-                    System.out.println("col " + (col + 1) + " row " + (row + 1) + " end col " + (col + 5) + " end row " + (row + 5) + " Player " + winner + " wins!");
-                    System.out.println("Diagonal win, bottom right to upper left");
+                    System.out.println(winner + " wins diagonally with " + getColumn(col) + (row + 1) + " to " + getColumn(col + 4) + (row - 3));
                     winnderExists = true;
                     return player;
                 }
@@ -437,7 +429,7 @@ public class Board
             return mToken;
         }
 
-        System.out.println("Wrong entry...");// + x + " " + y);
+        System.out.println("Wrong entry...");
         return null;
     }
 
@@ -452,13 +444,10 @@ public class Board
             //From left
             if (!isRowFull(row))
             {
-                //System.out.println("Not full left");
-
                 int col = tryMove(row, false, player);
                 int strength = getMinNodes(depth - 1, maxStrength);
                 if (checkForPossibleWinner(player))
                 {
-                    //maxStrength = Integer.MAX_VALUE;
                     mBestMove.setRow(row);
                     mBestMove.setCol(col);
                     mBestMove.setStrength(strength);
@@ -467,27 +456,21 @@ public class Board
                 }
                 if (strength >= maxStrength)
                 {
-                    //System.out.println("Better");
                     maxStrength = strength;
                     mBestMove.setRow(row);
                     mBestMove.setCol(col);
                     mBestMove.setStrength(strength);
                 }
-                undoTryMove(col, row);//, col);//false);
-
-                //System.out.println("\nNew ROW\n");
+                undoTryMove(col, row);
             }
 
             //From right
             if (!isRowFull(row))
             {
-                //System.out.println("Not full right");
-
                 int col = tryMove(row, true, player);
                 int strength = getMinNodes(depth - 1, maxStrength);
                 if (checkForPossibleWinner(player))
                 {
-                    //maxStrength = Integer.MAX_VALUE;
                     mBestMove.setRow(row);
                     mBestMove.setCol(col);
                     mBestMove.setStrength(strength);
@@ -496,18 +479,14 @@ public class Board
                 }
                 if (strength >= maxStrength)
                 {
-                    //System.out.println("Better");
                     maxStrength = strength;
                     mBestMove.setRow(row);
                     mBestMove.setCol(col);
                     mBestMove.setStrength(strength);
                 }
-                undoTryMove(col, row);//true);
-                //System.out.println("\nNew ROW\n");
+                undoTryMove(col, row);
             }
         }
-
-        //System.out.println("Player: " + player + "     with tokens: " + countNtokens());
         return mBestMove;
     }
 
@@ -695,9 +674,13 @@ public class Board
 
         int score = 0;
 
+        /**
+         * For each row and column check if there exists a possibility of winning and if yes assign to it points. Points are
+         * counted as positive for myself and negative for the opponent. A sum of those points determine the move score. The
+         * highest score wins and that move is done
+         */
         for (int col = 0; col < COL; col++)
         {
-
             for (int row = 0; row < ROW; row++)
             {
                 score += attack * verticalScoreUp(col, row, player);
@@ -719,8 +702,6 @@ public class Board
                 score -= defense * (diagonalScore2Up(col, row, opponent));
                 score += attack * diagonalScore2Down(col, row, player);
                 score -= defense * (diagonalScore2Down(col, row, opponent));
-
-
             }
         }
         return score;
@@ -1004,32 +985,57 @@ public class Board
     public void realMove(BestMove mBestMove)
     {
         //Testing final choice
+        char mCol = getColumn(mBestMove.getCol());
+
+        if (player == 1)
+        {
+            System.out.print("Board after Black moved to ");
+        }
+        else
+        {
+            System.out.print("Board after White moved to ");
+        }
+        System.out.println("" + mCol + (mBestMove.getRow() + 1));
+
+        tokenPlacements[mBestMove.getCol()][mBestMove.getRow()] = player;
+        checkForWinner();
+    }
+
+    /**
+     * Transform column number to a column letter
+     *
+     * @param colN The column number
+     * @return The column letter
+     */
+    char getColumn(int colN)
+    {
         char mCol;
-        if (mBestMove.getCol() == 0)
+
+        if (colN == 0)
         {
             mCol = 'A';
         }
-        else if (mBestMove.getCol() == 1)
+        else if (colN == 1)
         {
             mCol = 'B';
         }
-        else if (mBestMove.getCol() == 2)
+        else if (colN == 2)
         {
             mCol = 'C';
         }
-        else if (mBestMove.getCol() == 3)
+        else if (colN == 3)
         {
             mCol = 'D';
         }
-        else if (mBestMove.getCol() == 4)
+        else if (colN == 4)
         {
             mCol = 'E';
         }
-        else if (mBestMove.getCol() == 5)
+        else if (colN == 5)
         {
             mCol = 'F';
         }
-        else if (mBestMove.getCol() == 6)
+        else if (colN == 6)
         {
             mCol = 'G';
         }
@@ -1038,36 +1044,6 @@ public class Board
             mCol = 'H';
         }
 
-        if (player == 1)
-        {
-            System.out.print("Board after Black moved to ");
-        }
-        else
-        {
-            System.out.print("Board after Black moved to ");
-        }
-        System.out.println("" + mCol + (mBestMove.getRow() + 1));
-
-        tokenPlacements[mBestMove.getCol()][mBestMove.getRow()] = player;
-        checkForWinner();
-    }
-    Random generator = new Random();
-
-    public BestMove randomMove()
-    {
-        BestMove b = new BestMove();
-
-        boolean side = generator.nextBoolean();
-        int row = generator.nextInt(ROW - 1);
-
-        int result = -1;
-        while (result == -1)
-        {
-            result = tryMove(row, side, player);
-        }
-
-        b.setCol(result);
-        b.setRow(row);
-        return b;
+        return mCol;
     }
 }

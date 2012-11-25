@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package MagneticCave;
 
 /**
  *
- * @author Greg
+ * @author Grzegorz Gut <gregg.gut@gmail.com>
  */
 public class Token
 {
