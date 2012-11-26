@@ -27,19 +27,22 @@ public class Comp472
         {
             case 1:
                 /**
-                 * Heuristic is equally defensive as attacking
+                 * Heuristic is equally defensive as attacking, anyhow this option does not use heuristic since it's manual mode
+                 * for both players
                  */
                 mBoard = new Board(1, 1);
                 break;
             case 2:
                 /**
-                 * The heuristic will be much more defensive then attacking
+                 * The heuristic will be much more defensive then attacking. This is because the computer gets to go second and we
+                 * should play more defensively
                  */
                 mBoard = new Board(1, 5);
                 break;
             case 3:
                 /**
-                 * The heuristic will be more defensive then attacking
+                 * The heuristic will be almost as defensive as attacking. The slight advantage for defensive is because we rather
+                 * have a tie game than loose.
                  */
                 mBoard = new Board(4, 5);
                 break;
@@ -137,6 +140,9 @@ public class Comp472
                 }
                 break;
             }
+            /**
+             * This is for testing purposes. To enable this we need to modify the accepted mode range in displayGameOptions()
+             */
             case 4:
             {
                 int iteration = 0;
@@ -175,14 +181,14 @@ public class Comp472
             System.out.println("1 - Manual entry for both players");
             System.out.println("2 - Manual entry for player 1 (Black) moves & automatic moves for player 2 (White) moves");
             System.out.println("3 - Manual entry for player 2 (White) moves & automatic moves for player 1 (Black) moves");
-            System.out.println("4 - Full automatic play");
+            //System.out.println("4 - Full automatic play");
 
             try
             {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 mode = Integer.parseInt(br.readLine());
                 //System.out.println("Mode: " + mode);
-                if (mode > 0 && mode < 5)
+                if (mode > 0 && mode < 4)
                 {
                     return mode;
                 }
