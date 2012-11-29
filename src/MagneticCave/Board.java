@@ -74,7 +74,7 @@ public class Board
      */
     public void displayBoard()
     {
-        System.out.println("\n  A B C D E F G H");
+        System.out.println("\n   A  B  C  D  E  F  G  H");
         for (int row = ROW - 1; row > -1; row--)
         {
             System.out.print((row + 1) + " ");
@@ -82,25 +82,25 @@ public class Board
             {
                 if (tokenPlacements[col][row] == 0)
                 {
-                    System.out.print("0 ");
+                    System.out.print("[ ]");
                 }
                 else if (tokenPlacements[col][row] == 1)
                 {
-                    System.out.print("B ");
+                    System.out.print("[B]");
                 }
                 else
                 {
-                    System.out.print("W ");
+                    System.out.print("[W]");
                 }
             }
-            System.out.print((row + 1));
+            System.out.print(" "+(row + 1));
             if (row == 0)
             {
                 break;
             }
             System.out.print('\n');
         }
-        System.out.println("\n  A B C D E F G H");
+        System.out.println("\n   A  B  C  D  E  F  G  H");
     }
 
     /**
